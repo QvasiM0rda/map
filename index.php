@@ -18,11 +18,11 @@ if (!empty($_GET['search'])) {
   $response = $yandexAPI->getResponse();
   $collection = $response->getList();
   foreach ($collection as $item) {
-    $long = round($item->getLongitude(), 2);
-    $lat = round($item->getLatitude(), 2);
+    $long = $item->getLongitude();
+    $lat = $item->getLatitude();
     $address = $item->getAddress();
     $locationArray[] = [
-      'link' => '?lat=' . $lat . '&long=' . $long,
+      'link' => 'lat=' . $lat . '&long=' . $long,
       'exact_address' => $address
     ];
   }
@@ -75,7 +75,8 @@ $address = !empty($_GET['exact_address']) ? $_GET['exact_address'] : 'Москв
   <br>
   <?php
     if (!empty($locationArray)) {
-      $uri = '/index.php?address=Ленина+37&search=Найти+на+карте';
+      $addr = str_replace(' ', '+', $addr);
+      $uri = 'index.php?address=' . $addr . '&search=Найти+на+карте&';
       foreach ($locationArray as $location) {
         $selectedAddress = $location['link'] . '&exact_address=' .  $location['exact_address'];
   ?>
